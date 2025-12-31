@@ -11,56 +11,6 @@ using namespace std;
 #include <string>
 
 #include <cctype>
-struct stdate
-
-{
-	string DateName;
-	int DateNum;
-	short day;
-
-	short mounth;
-
-	short year;
-
-	short DaysVication;
-};
-
-#include <fstream>
-enum AllDays
-{
-	Mondy = 1,
-	Tuesday = 2,
-	Wensday = 3,
-	thusday = 4,
-	friday = 5,
-	sturday = 6,
-	sanday = 0,
-};
-
-int DayOfWeekOrder(short Day, short Month, short Year)
-{
-	int a, y, m;
-	a = (14 - Month) / 12;
-	y = Year - a;
-	m = Month + (12 * a) - 2;
-	// Gregorian:
-	// 0:sun, 1:Mon, 2:Tue...etc
-	return (Day + y + (y / 4) - (y / 100) + (y / 400) + ((31 * m) / 12)) % 7;
-}
-int DayOfWeekOrder(stdate date)
-{
-	return DayOfWeekOrder(date.day, date.mounth, date.year);
-}
-
-bool IsWeekend(int Day)
-{
-	if (Day == AllDays::sturday || Day == AllDays::sanday)
-	{
-		return true;
-	}
-	return false;
-}
-
 short ask(string ask)
 
 {
@@ -73,6 +23,15 @@ short ask(string ask)
 
 	return num;
 }
+struct stdate1
+
+{
+	short day;
+
+	short mounth;
+
+	short year;
+};
 
 bool year(short year)
 
@@ -97,7 +56,18 @@ short days(short mounth, short Yeear)
 	return (mounth == 2) ? (year(Yeear) ? 29 : 28) : arry31[mounth - 1];
 }
 
-stdate AddOneDay(stdate date, int HowManyDayYouWantToAdd)
+bool CheckTheDateIsAferDate2(stdate1 date,stdate1 date2)
+{
+
+	return (date.year > date2.year) ? true : (date.mounth > date2.mounth) ? true
+										 : (date.day > date2.day)		  ? true
+																		  : false;
+
+															
+}
+
+
+stdate1 AddOneDay1(stdate1 date, int HowManyDayYouWantToAdd)
 
 {
 
@@ -139,37 +109,27 @@ stdate AddOneDay(stdate date, int HowManyDayYouWantToAdd)
 	return date;
 }
 
-int PringNumdays(int askyear, int askkMounth, int askkDay)
-
+int CompareDates(stdate1 date,stdate1 date2)
 {
-
-	int counter = 0;
-
-	for (int d = 1; d <= askkMounth - 1; d++)
-
+	int counter=0;
+	if(CheckTheDateIsAferDate2(date,date2))
 	{
-
-		counter += days(d, askyear);
+	while(CheckTheDateIsAferDate2(date,date2))
+	{
+		date2=AddOneDay1(date2,1);
+		counter++;
 	}
-
-	counter += askkDay;
-
 	return counter;
-}
-
-int NumDayVaction(stdate date)
-{
-	int counter = 0;
-	int NumDays = date.DaysVication;
-	for (int i = 0; i < NumDays; i++)
+	}
+	else
 	{
-		if (IsWeekend(DayOfWeekOrder(date)))
+		while(!CheckTheDateIsAferDate2(date,date2))
 		{
+			date=AddOneDay1(date,1);
 			counter++;
 		}
-		date=AddOneDay(date,1);
+			return counter;
 	}
-	return counter + date.DaysVication+1;
 }
 int main()
 
@@ -179,9 +139,10 @@ int main()
 
 	{
 
-		stdate date;
+		stdate1 date;
+		stdate1 date2;
 
-		date.year = ask("give me the year:");
+		date.year = ask("\ngive me the year:");
 
 		date.mounth = ask("\n give me the mounth:");
 
@@ -193,12 +154,15 @@ int main()
 
 			 << endl;
 
-		date.DaysVication = ask("\n how many vaction do you want: ");
-		int DaysAfterAddWekkEnd = NumDayVaction(date);
-		date = AddOneDay(date, DaysAfterAddWekkEnd);
-		cout << "\n the real num days of vaction is: " << DaysAfterAddWekkEnd;
-		cout << "return date: " << date.day << "/" << date.mounth << "/" << date.year;
+		date2.year = ask("\n give me the year:");
+
+		date2.mounth = ask("\n give me the mounth:");
+
+		date2.day = ask("\n give me the day:");
+
+		CheckTheDateIsAferDate2(date,date2) ? cout << "yes date1 after date2" : cout << "no date1 not after date2";
 		cout << endl;
+		cout<<"\n compare rusult is : "<<CompareDates(date,date2);
 	}
 
 	return 0;
