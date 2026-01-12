@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iostream>
 
 using namespace std;
 
@@ -15,11 +16,20 @@ using namespace std;
 #include <fstream>
 
 
+  
+
 void ReturnToPageOne();
 
 void askLoop();
 
 void ReturnToPageBalance();
+
+void WaitAndClear()
+{
+    cout << "\n\nPress ENTER to continue...";
+    cin.get(); // انتظر ENTER
+    cout << "\033[2J\033[1;1H"; // مسح الشاشة في Linux/macOS/Windows (ANSI escape code)
+}
 
 enum enNumbreAction
 
@@ -1068,7 +1078,7 @@ void askLoop(enNumbreAction NumbreAction)
 
   {
 
-    system("cls");
+    WaitAndClear();
 
     Action1(ReadInfoFromFile());
 
@@ -1082,7 +1092,7 @@ void askLoop(enNumbreAction NumbreAction)
 
   {
 
-    system("cls");
+    WaitAndClear();
 
     Action2();
 
@@ -1096,7 +1106,7 @@ void askLoop(enNumbreAction NumbreAction)
 
   {
 
-    system("cls");
+    WaitAndClear();
 
     Action3();
 
@@ -1110,7 +1120,7 @@ void askLoop(enNumbreAction NumbreAction)
 
   {
 
-    system("cls");
+    WaitAndClear();
 
     Action4();
 
@@ -1124,7 +1134,7 @@ void askLoop(enNumbreAction NumbreAction)
 
   {
 
-    system("cls");
+    WaitAndClear();
 
     Action5();
 
@@ -1138,7 +1148,7 @@ void askLoop(enNumbreAction NumbreAction)
 
   {
 
-    system("cls");
+    WaitAndClear();
 
     switch(enNumberTranstactions(askTransactios()))
 
@@ -1174,7 +1184,7 @@ void askLoop(enNumbreAction NumbreAction)
 
   {
 
-    system("cls");
+    WaitAndClear();
 
     break;
 
@@ -1191,8 +1201,9 @@ void ReturnToPageBalance()
   cout << "\n \n Press ENTER to Return To First Page";
 
 if (cin.get() == '\n')
+    WaitAndClear();
 
-    system("cls");
+
 
   askLoop(enNumbreAction(6));
 
@@ -1204,8 +1215,8 @@ void ReturnToPageOne()
 
   cout << "\n \n Press ENTER to Return To First Page";
 
-if (cin.get() == '\n')
-    system("cls");
+WaitAndClear();
+
 
   askLoop(enNumbreAction(ask()));
 
