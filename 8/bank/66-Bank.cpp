@@ -14,6 +14,8 @@ using namespace std;
 #include <cctype>
 
 #include <fstream>
+#include "CheckuserNameAndPass.h"
+#include "Info.h"
 
 
   
@@ -71,31 +73,7 @@ enum enNumberTranstactions
 
 };
 
-struct Info
 
-{
-
-  string AccountData;
-
-  string Number;
-
-  string Name;
-
-  string Phone;
-
-  double Balance;
-
-  string SizeOflist;
-
-  int checkifExitt;
-
-};
-
-struct stUserPass
-{
-  string user;
-  string pass;
-};
 
 int ask()
 
@@ -464,34 +442,6 @@ int checkk(Info &Data,string filename)
   return counter;
 
 }
-int CheckUserPass(Info &Data,string filename,string user)
-
-{
-
-  int counter = 0;
-
-  Data.AccountData=user;
-  vector <string> lines=ReadInfoFromFile(filename);
-
-  for (string &n :lines)
-
-  {
-
-    bool check = CheckIfexit(n, Data.AccountData);
-
-    if (check)
-
-    {
-
-      counter++;
-
-    }
-
-  }
-
-  return counter;
-
-}
 
 void vip(string action)
 
@@ -543,7 +493,7 @@ Info AskUSER(Info OneDATA)
 
 }
 
-Info addNewClient()
+Info addNewClient(string namefile)
 
 {
 
@@ -551,7 +501,7 @@ Info addNewClient()
 
   vip("add new client screen");
 
-  if (checkk(Data,"info.txt") != 0)
+  if (checkk(Data,namefile) != 0)
 
   {
 
@@ -561,7 +511,7 @@ Info addNewClient()
 
       cout << "\n Cleint with " << "[" << Data.AccountData << "]" << " is allrady exit enter anther account number: ";
 
-    } while (checkk(Data,"info.txt") != 0);
+    } while (checkk(Data,namefile) != 0);
 
   }
 
@@ -837,7 +787,7 @@ void Action2()
 
   Info Data;
 
-  Data = addNewClient();
+  Data = addNewClient("info.txt");
 
   UpdateFile(Data);
 
@@ -853,7 +803,7 @@ void Action2()
 
   {
 
-    Data = addNewClient();
+    Data = addNewClient("info.txt");
 
     UpdateFile(Data);
 
@@ -1110,71 +1060,9 @@ stUserPass AskInfoLogin()
 
 
 
-bool FindUserInCoorect(Info &Data,string filename,stUserPass UserPass)
-
-{
-
-  if (CheckUserPass(Data,filename,UserPass.user) == 0 && CheckUserPass(Data,filename,UserPass.user + "#//#"+UserPass.pass) == 0)
-
-  {
-
-    cout << "\n Cleint with " << "[" << Data.AccountData << "]" << " is not exit ";
-
-    return false;
-
-  }
-
-  else
-
-  {
-
-    Info S1;
-
-    vector<string> Slines = ReadInfoFromFile("info.txt");
-
-    for (string &n : Slines)
-
-    {
-
-      S1 = StringPutInStruct(VectorSplitString(n));
-
-      if (S1.AccountData == Data.AccountData)
-
-      {
-
-        Data=S1;
-
-        PrintOneString(S1);
-
-      }
-
-    }
-
-    return true;
-
-  }
-
-}
 
 
-bool Askpassword()
-{
-  stUserPass UserPass;
-  vector <string> Fileusers;
-  Fileusers=ReadInfoFromFile("Users.txt");
-  Info Data;
 
-  UserPass=AskInfoLogin();
-  if(FindUserInCoorect(Data,"Users.txt",UserPass))
-  {
-        return true;
-  }
-  else
-  {
-    return false;
-  }
-
-}
 
 void askLoop(enNumbreAction NumbreAction)
 
@@ -1334,9 +1222,11 @@ WaitAndClear();
 int main()
 
 {
-    if(Askpassword())
+    stUserPass UserPass;
+    UserPass=AskInfoLogin();
+    if(CheckuserNameAndPass(UserPass.user,UserPass.pass))
   {
-  askLoop(enNumbreAction(ask()));
+  ShowList();
   }
   return 0;
 

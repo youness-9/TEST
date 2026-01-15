@@ -1,0 +1,35 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "C++ Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${fileDirname}/${fileBasenameNoExtension}",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${fileDirname}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+"setupCommands": [
+    {
+        "description": "تجاهل كل ملفات النظام والمكتبات",
+        "text": "-interpreter-exec console \"skip -gfi **/include/c++/**\"",
+        "ignoreFailures": true
+    },
+    {
+        "description": "تجاهل ملفات النظام الأساسية",
+        "text": "-interpreter-exec console \"skip -gfi **/bits/*.h\"",
+        "ignoreFailures": true
+    },
+    {
+        "description": "تجاهل أي ملف خارج مجلد العمل",
+        "text": "-interpreter-exec console \"skip -gfi /usr/include/**\"",
+        "ignoreFailures": true
+    }
+],
+            "preLaunchTask": "C/C++: g++ build active file"
+        }
+    ]
+}
